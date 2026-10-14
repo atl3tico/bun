@@ -12,8 +12,8 @@ import {
 } from "harness";
 import { constants as osConstants } from "os";
 import { join, sep } from "path";
-import { pathToFileURL } from "url";
 import { TestRegistry } from "registry";
+import { pathToFileURL } from "url";
 
 var verdaccio = new TestRegistry();
 
