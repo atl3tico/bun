@@ -1533,7 +1533,8 @@ function decodesToUTF8(escapes: string): boolean {
 function escapeUndecodableEscapes(url: string): string {
   return url.replace(/(?:%[0-9a-f]{2})+/gi, run => {
     let escaped = "";
-    for (let start = 0; start < run.length; ) {
+    let start = 0;
+    while (start < run.length) {
       // A UTF-8 sequence has 1 to 4 bytes, and none is the start of a longer one.
       let end = start + 3;
       while (end <= run.length && end - start <= 12 && !decodesToUTF8(run.slice(start, end))) end += 3;

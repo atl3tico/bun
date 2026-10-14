@@ -15,6 +15,7 @@ import {
   tempDirWithFiles,
   tmpdirSync,
 } from "harness";
+import assert from "node:assert";
 import fs, {
   closeSync,
   constants,
@@ -55,7 +56,6 @@ import fs, {
   writeSync,
   writevSync,
 } from "node:fs";
-import assert from "node:assert";
 import * as os from "node:os";
 import path, { dirname, relative, resolve } from "node:path";
 import { pathToFileURL } from "node:url";

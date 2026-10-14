@@ -298,7 +298,10 @@ it("file url whose path does not percent-decode to UTF-8 is an error that names 
       }
     `,
   });
-  writeFileSync(`${dir}/static.mjs`, `import { foo } from '${pathToFileURL(String(dir))}/50%deposit.js';\nconsole.log(foo);`);
+  writeFileSync(
+    `${dir}/static.mjs`,
+    `import { foo } from '${pathToFileURL(String(dir))}/50%deposit.js';\nconsole.log(foo);`,
+  );
 
   const run = async (entry: string) => {
     await using proc = Bun.spawn({
