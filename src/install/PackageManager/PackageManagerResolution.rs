@@ -279,18 +279,25 @@ impl PackageManager {
     }
 
     /// A row with no name of its own (empty, or equal to its version literal) takes the name of the package it resolved to.
-    #[inline]
+    #[inline(always)]
     fn name_by_resolution(&mut self, dependency_id: DependencyID, package_id: PackageID) {
-        let buffers = &mut self.lockfile.buffers;
+        let buffers = &self.lockfile.buffers;
         let string_buf = buffers.string_bytes.as_slice();
-        let dep = &mut buffers.dependencies.as_mut_slice()[dependency_id as usize];
+        let dep = &buffers.dependencies.as_slice()[dependency_id as usize];
         if dep.name.is_empty()
             || dep.name.slice(string_buf) == dep.version.literal.slice(string_buf)
         {
-            dep.name = self.lockfile.packages.items_name()[package_id as usize];
-            dep.name_hash = self.lockfile.packages.items_name_hash()[package_id as usize];
-            self.named_by_resolution.push(dependency_id);
+            self.take_name_of_package(dependency_id, package_id);
         }
+    }
+
+    #[cold]
+    #[inline(never)]
+    fn take_name_of_package(&mut self, dependency_id: DependencyID, package_id: PackageID) {
+        let dep = &mut self.lockfile.buffers.dependencies.as_mut_slice()[dependency_id as usize];
+        dep.name = self.lockfile.packages.items_name()[package_id as usize];
+        dep.name_hash = self.lockfile.packages.items_name_hash()[package_id as usize];
+        self.named_by_resolution.push(dependency_id);
     }
 
     pub(crate) fn verify_resolutions(&mut self, log_level: LogLevel) {
